@@ -5,7 +5,6 @@ import "@radix-ui/themes/styles.css";
 import "./globals.css";
 import Navibar from "./Navbar";
 import { Theme } from "@radix-ui/themes";
-import { Container } from "react-bootstrap";
 import Footer from "./Footer";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -32,10 +31,8 @@ export default function RootLayout({
       <body className={inter.className}>
         <Theme>
           <Navibar />
-          <Container>
-            <main>{children}</main>
-            <Footer />
-          </Container>
+          <main>{children}</main>
+          <Footer />
         </Theme>
       </body>
     </html>

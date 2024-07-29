@@ -15,7 +15,7 @@ import { GiAbstract003 } from "react-icons/gi";
 const Navibar = () => {
   return (
     <>
-      <Navbar expand="lg" className="bg-body-tertiary mb-3 py-4 align-center">
+      <Navbar expand="lg" className="bg-body-tertiary py-4 align-center">
         <Container fluid>
           <Navbar.Brand href="/home">
             <GiAbstract003 size="50" />
