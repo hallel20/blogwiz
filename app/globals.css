@@ -1,3 +1,50 @@
 body {
-  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.brandname {
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-size: 35px;
+  font-weight: bold;
+}
+
+.align-center {
+  align-items: center;
+}
+
+.new-post-placeholder {
+  font-size: large;
+  font-weight: 600;
+}
+
+.footer-list {
+  list-style: none;
+  padding-left: 8px;
+}
+
+.footer-list a {
+  text-decoration: none;
+  color: #462d2dc4;
+}
+
+.footer a {
+  text-decoration: none;
+  color: #462d2dc4;
+}
+
+.footer .small {
+  font-size: 12px;
+}
+
+
+@media screen and (max-width: 767px) {
+  .brandname {
+    font-size: 20px;
+  }
+}
+
+@media screen and (max-width: 1080px) {
+  .brandname { 
+    font-size: 30px;
+  }
 }
