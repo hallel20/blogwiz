@@ -8,7 +8,8 @@ const createPostSchema = z.object({
 })
 
 export async function GET(request: NextRequest) {
-    return null
+    const posts = prisma.post.findMany()
+    return NextResponse.json(posts)
 }
 
 export async function POST(request: NextRequest) {
