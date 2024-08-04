@@ -43,7 +43,9 @@ const Navibar = () => {
                   />
                   <Button variant="outline-primary">Search</Button>
                 </Form>
-                <Nav.Link href="/">Home</Nav.Link>
+                <Link href="/" className="nav-link">
+                  Home
+                </Link>
                 <NavDropdown
                   title="Posts"
                   id="offcanvasNavbarDropdown-expand-md"

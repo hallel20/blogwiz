@@ -1,7 +1,5 @@
-import React from "react";
+import { redirect } from "next/navigation";
 
-const Posts = () => {
-  return <div>Posts</div>;
-};
-
-export default Posts;
+export default function Posts() {
+  redirect("/posts/recent");
+}

@@ -23,6 +23,10 @@ body {
   height: 27vh;
 }
 
+.page-cover .big-gap {
+  height: 40vh;
+}
+
 .align-center {
   align-items: center;
 }
@@ -30,6 +34,33 @@ body {
 .new-post-placeholder {
   font-size: large;
   font-weight: 600;
+}
+
+.card-image {
+  width: 40%;
+  overflow: hidden;
+}
+
+.card-image img {
+  border-radius: 30px;
+  width: 100%;
+  max-height: 200px;
+  image-rendering: optimizeSpeed;
+  object-fit: cover;
+}
+
+.card-content {
+  text-align: justify;
+  width: 60%;
+}
+
+.app-link {
+  text-decoration: none;
+  color: #660404c4;
+}
+
+.app-link:hover {
+  color: #010366c4;
 }
 
 .footer-list {
@@ -55,6 +86,10 @@ body {
 @media screen and (max-width: 767px) {
   .brandname {
     font-size: 20px;
+  }
+
+  .footer {
+    text-align: center;
   }
 }
 
