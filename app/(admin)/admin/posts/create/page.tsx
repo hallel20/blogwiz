@@ -1,6 +1,6 @@
 import Link from "next/link";
-import PostForm from "./PostForm";
 import UploadImage from "@/components/UploadImage";
+import PostForm from "./PostForm";
 
 const page = () => {
   return (
@@ -18,7 +18,9 @@ const page = () => {
 
       {/* Form Container */}
       <div className="bg-white shadow-xl flex w-full rounded-lg p-6">
-        <div className="w-7/12">{/* <PostForm /> */}</div>
+        <div className="w-7/12">
+          <PostForm />
+        </div>
         <div className="w-5/12">
           <UploadImage />
         </div>

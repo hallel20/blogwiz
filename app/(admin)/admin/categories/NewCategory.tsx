@@ -1,9 +1,19 @@
+"use client";
 import Button from "@/components/reusable/Button";
 import ImageUploadModal from "@/components/reusable/ImageUploadModal";
+import Spinner from "@/components/reusable/Spinner";
 import { createCategory } from "@/lib/actions";
 import Image from "next/image";
 import { Dispatch, SetStateAction, useState } from "react";
+import { useForm } from "react-hook-form";
 import { IoMdCloseCircle } from "react-icons/io";
+
+export interface CategoryForm {
+  name: string;
+  description: string;
+  slug: string;
+  image: string;
+}
 
 const NewCategory = ({
   setOpen,
@@ -11,6 +21,11 @@ const NewCategory = ({
   setOpen: Dispatch<SetStateAction<boolean>>;
 }) => {
   const [images, setImages] = useState<string[]>();
+  const [error, setError] = useState<any>();
+  const [loading, setLoading] = useState(false);
+
+  const { register, reset, handleSubmit } = useForm<CategoryForm>();
+
   return (
     <div className="container mx-auto py-10">
       {/* Page Header */}
@@ -28,7 +43,22 @@ const NewCategory = ({
 
       {/* Form Container */}
       <div className="bg-white shadow-lg rounded-lg p-6">
-        <form action={createCategory}>
+        <form
+          onSubmit={handleSubmit(async (data) => {
+            try {
+              setLoading(true);
+              await createCategory(data);
+              reset();
+              setOpen(false);
+              setLoading(false);
+              setImages([]);
+            } catch (ex) {
+              setError(ex);
+              setLoading(false);
+            }
+          })}
+        >
+          {error && <p className="text-center text-red-500">{error}</p>}
           {/* Category Name */}
           <div className="mb-4">
             <label
@@ -40,7 +70,7 @@ const NewCategory = ({
             <input
               type="text"
               id="category_name"
-              name="name"
+              {...register("name")}
               placeholder="Enter category name"
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
@@ -56,7 +86,7 @@ const NewCategory = ({
             </label>
             <textarea
               id="category_description"
-              name="category_description"
+              {...register("description")}
               rows={4}
               placeholder="Enter category description"
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -73,7 +103,7 @@ const NewCategory = ({
             <input
               type="text"
               id="slug"
-              name="slug"
+              {...register("slug")}
               placeholder="Enter category slug (URL-friendly)"
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
@@ -92,13 +122,19 @@ const NewCategory = ({
                 objectFit="cover"
                 className="mt-3 rounded-md"
               />
-              <input type="hidden" value={images[0]} name="image" />
+              <input type="hidden" value={images[0]} {...register("image")} />
             </>
           )}
 
           {/* Submit Button */}
           <div className="flex justify-end">
-            <Button type="submit">Create Category</Button>
+            <Button
+              type="submit"
+              disabled={loading}
+              className="flex items-center gap-2"
+            >
+              Create Category{loading && <Spinner />}
+            </Button>
           </div>
         </form>
       </div>

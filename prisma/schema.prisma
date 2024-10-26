@@ -16,14 +16,13 @@ datasource db {
 model User {
   id        Int       @id @default(autoincrement())
   username  String    @unique @db.VarChar(255)
-  email     String
+  email     String    @unique
   firstname String    @db.VarChar(255)
   lastname  String    @db.VarChar(255)
   bio       String?   @db.Text()
   password  String
-  authorId  Int?
-  role      Role
-  Image     Image[]
+  role      Role      @default(user)
+  images    Image[]
   comments  Comment[]
   posts     Post[]
 }
@@ -53,6 +52,7 @@ model Post {
   content    String     @db.Text()
   createdAt  DateTime   @default(now())
   updatedAt  DateTime   @updatedAt
+  tags       String     @db.VarChar(255)
   userId     Int
   user       User       @relation(fields: [userId], references: [id])
   categoryId Int

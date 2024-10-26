@@ -1,6 +1,12 @@
+import { getCategories } from "@/lib/data";
 import CategoryModal from "./Modal";
+import Link from "next/link";
+import DeleteCategory from "./DeleteCategory";
 
-const page = () => {
+const page = async () => {
+  const categories = await getCategories();
+  // console.log(categories);
+
   return (
     <div className="container mx-auto py-10">
       {/* Table Header */}
@@ -23,9 +29,9 @@ const page = () => {
               <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                 Post Count
               </th>
-              <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+              {/* <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                 Status
-              </th>
+              </th> */}
               <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">
                 Actions
               </th>
@@ -33,33 +39,40 @@ const page = () => {
           </thead>
           <tbody>
             {/* Row 1 */}
-            <tr>
-              <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                <p className="text-gray-900 whitespace-no-wrap">Technology</p>
-              </td>
-              <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                <p className="text-gray-600 whitespace-no-wrap">
-                  Posts related to the latest in tech
-                </p>
-              </td>
-              <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                <p className="text-gray-600 whitespace-no-wrap">32 posts</p>
-              </td>
-              <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                <span className="relative inline-block px-3 py-1 font-semibold text-green-900 leading-tight">
-                  <span className="absolute inset-0 bg-green-200 opacity-50 rounded-full"></span>
-                  <span className="relative">Active</span>
-                </span>
-              </td>
-              <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm text-center">
-                <a href="#" className="text-blue-500 hover:text-blue-700 mr-3">
-                  Edit
-                </a>
-                <a href="#" className="text-red-500 hover:text-red-700">
-                  Delete
-                </a>
-              </td>
-            </tr>
+            {categories.map((category) => (
+              <tr key={category.id}>
+                <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                  <p className="text-gray-900 whitespace-no-wrap">
+                    {category.name}
+                  </p>
+                </td>
+                <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                  <p className="text-gray-600 whitespace-no-wrap">
+                    {category.description}
+                  </p>
+                </td>
+                <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                  <p className="text-gray-600 whitespace-no-wrap">
+                    {category._count.posts} posts
+                  </p>
+                </td>
+                {/* <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                  <span className="relative inline-block px-3 py-1 font-semibold text-green-900 leading-tight">
+                    <span className="absolute inset-0 bg-green-200 opacity-50 rounded-full"></span>
+                    <span className="relative">Active</span>
+                  </span>
+                </td> */}
+                <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm text-center">
+                  <Link
+                    href={`/admin/categories/${category.id}`}
+                    className="text-blue-500 hover:text-blue-700 mr-3"
+                  >
+                    Edit
+                  </Link>
+                  <DeleteCategory name={category.name} id={category.id} />
+                </td>
+              </tr>
+            ))}
 
             {/* Row 2 */}
             <tr>
@@ -76,19 +89,22 @@ const page = () => {
               <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                 <p className="text-gray-600 whitespace-no-wrap">18 posts</p>
               </td>
-              <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+              {/* <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                 <span className="relative inline-block px-3 py-1 font-semibold text-red-900 leading-tight">
                   <span className="absolute inset-0 bg-red-200 opacity-50 rounded-full"></span>
                   <span className="relative">Inactive</span>
                 </span>
-              </td>
+              </td> */}
               <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm text-center">
-                <a href="#" className="text-blue-500 hover:text-blue-700 mr-3">
+                <Link
+                  href="#"
+                  className="text-blue-500 hover:text-blue-700 mr-3"
+                >
                   Edit
-                </a>
-                <a href="#" className="text-red-500 hover:text-red-700">
+                </Link>
+                <Link href="#" className="text-red-500 hover:text-red-700">
                   Delete
-                </a>
+                </Link>
               </td>
             </tr>
 
@@ -105,19 +121,22 @@ const page = () => {
               <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                 <p className="text-gray-600 whitespace-no-wrap">12 posts</p>
               </td>
-              <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+              {/* <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                 <span className="relative inline-block px-3 py-1 font-semibold text-green-900 leading-tight">
                   <span className="absolute inset-0 bg-green-200 opacity-50 rounded-full"></span>
                   <span className="relative">Active</span>
                 </span>
-              </td>
+              </td> */}
               <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm text-center">
-                <a href="#" className="text-blue-500 hover:text-blue-700 mr-3">
+                <Link
+                  href="#"
+                  className="text-blue-500 hover:text-blue-700 mr-3"
+                >
                   Edit
-                </a>
-                <a href="#" className="text-red-500 hover:text-red-700">
+                </Link>
+                <Link href="#" className="text-red-500 hover:text-red-700">
                   Delete
-                </a>
+                </Link>
               </td>
             </tr>
 

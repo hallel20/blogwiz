@@ -1,15 +1,17 @@
+import Link from "next/link";
+
 const page = () => {
   return (
     <div className="container mx-auto py-10">
       {/* Table Header */}
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-2xl font-bold text-gray-700">Manage Users</h2>
-        <a
-          href="#"
+        <Link
+          href="/admin/users/add"
           className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-600"
         >
           Add New User
-        </a>
+        </Link>
       </div>
 
       {/* Responsive Table */}
@@ -55,12 +57,15 @@ const page = () => {
                 </span>
               </td>
               <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm text-center">
-                <a href="#" className="text-blue-500 hover:text-blue-700 mr-3">
+                <Link
+                  href="#"
+                  className="text-blue-500 hover:text-blue-700 mr-3"
+                >
                   Edit
-                </a>
-                <a href="#" className="text-red-500 hover:text-red-700">
+                </Link>
+                <Link href="#" className="text-red-500 hover:text-red-700">
                   Delete
-                </a>
+                </Link>
               </td>
             </tr>
 
@@ -84,12 +89,15 @@ const page = () => {
                 </span>
               </td>
               <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm text-center">
-                <a href="#" className="text-blue-500 hover:text-blue-700 mr-3">
+                <Link
+                  href="#"
+                  className="text-blue-500 hover:text-blue-700 mr-3"
+                >
                   Edit
-                </a>
-                <a href="#" className="text-red-500 hover:text-red-700">
+                </Link>
+                <Link href="#" className="text-red-500 hover:text-red-700">
                   Delete
-                </a>
+                </Link>
               </td>
             </tr>
 
@@ -113,12 +121,15 @@ const page = () => {
                 </span>
               </td>
               <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm text-center">
-                <a href="#" className="text-blue-500 hover:text-blue-700 mr-3">
+                <Link
+                  href="#"
+                  className="text-blue-500 hover:text-blue-700 mr-3"
+                >
                   Edit
-                </a>
-                <a href="#" className="text-red-500 hover:text-red-700">
+                </Link>
+                <Link href="#" className="text-red-500 hover:text-red-700">
                   Delete
-                </a>
+                </Link>
               </td>
             </tr>
 

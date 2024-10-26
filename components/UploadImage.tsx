@@ -2,7 +2,7 @@
 import axios from "axios";
 import Image from "next/image";
 import { useState } from "react";
-import { FaCamera } from "react-icons/fa6";
+import { FaCamera, FaTrashCan } from "react-icons/fa6";
 import Spinner from "@/components/reusable/Spinner";
 import { MdClose } from "react-icons/md";
 import { FaCopy } from "react-icons/fa";
@@ -13,6 +13,7 @@ const UploadImage = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     let image = new FormData();
@@ -51,6 +52,10 @@ const UploadImage = () => {
 
   const handleCopy = (image: string) => {
     navigator.clipboard.writeText(host + image);
+    setCopied(true);
+    setTimeout(() => {
+      setCopied(false);
+    }, 2000);
   };
 
   const handleRemove = async (image: string) => {
@@ -67,7 +72,12 @@ const UploadImage = () => {
 
   return (
     <div className="w-10/12 min-h-96 bg-white p-5 rounded-lg relative flex flex-col gap-4">
-      <p className="text-sm">You can upload extra images for the post here</p>
+      <p className="text-sm text-gray-500">
+        <em>
+          You can upload extra images for the post here, copy the link, paste in
+          the editor and preview post
+        </em>
+      </p>
       <h1 className="text-2xl font-semibold mb-6">Upload an Image</h1>
       <div className="flex flex-col gap-2">
         {urls &&
@@ -77,9 +87,9 @@ const UploadImage = () => {
               <div className="h-40 w-40 relative" key={image}>
                 <div
                   onClick={() => handleRemove(image)}
-                  className="absolute cursor-pointer -top-1 -right-1 text-xs rounded-full flex items-center justify-center p-1 bg-slate-300 text-slate-950"
+                  className="absolute cursor-pointer -top-1 -right-1 text-xs rounded-lg flex items-center justify-center p-1 bg-slate-100 text-red-500"
                 >
-                  <MdClose size="20" />
+                  <FaTrashCan size="20" />
                 </div>
                 <Image
                   src={image}
@@ -90,10 +100,16 @@ const UploadImage = () => {
                 />
               </div>
               <p
-                className="flex gap-2 cursor-pointer items-center text-[8px]"
+                className="flex gap-2 cursor-pointer text-slate-800 hover:text-blue-800 items-center text-[8px]"
                 onClick={() => handleCopy(image)}
               >
-                {host + image} <FaCopy size="10" />
+                {copied ? (
+                  "Copied"
+                ) : (
+                  <span>
+                    {host + image} <FaCopy size="10" />
+                  </span>
+                )}
               </p>
             </>
           ))}

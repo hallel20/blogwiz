@@ -7,22 +7,19 @@ import { useEffect, useState } from "react";
 import { Category } from "@prisma/client";
 import ImageUploadModal from "@/components/reusable/ImageUploadModal";
 import { getCategories } from "@/lib/data";
-
-interface PostForm {
-  title: string;
-  content: string;
-  categoryId: number;
-  tags: string;
-  image: string;
-  status: string;
-}
+import Image from "next/image";
+import { createPost, PostFormType } from "@/lib/actions";
+import { useRouter } from "next/navigation";
 
 const PostForm = () => {
   const [categories, setCategories] = useState<Category[]>();
   const [images, setImages] = useState<string[]>();
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string>();
 
-  const { register, reset, control, handleSubmit } = useForm<PostForm>();
+  const router = useRouter();
+
+  const { register, reset, control, handleSubmit } = useForm<PostFormType>();
 
   useEffect(() => {
     const getStateCategories = async () => {
@@ -38,7 +35,14 @@ const PostForm = () => {
   }, []);
 
   return (
-    <form onSubmit={() => handleSubmit}>
+    <form
+      onSubmit={handleSubmit(async (data) => {
+        setLoading(true);
+        await createPost(data);
+        setLoading(false);
+        router.push("/admin/posts/");
+      })}
+    >
       {/* Handle Errors */}
       {error && (
         <p className="text-red-500 font-semibold text-center">{error}</p>
@@ -58,10 +62,24 @@ const PostForm = () => {
       </div>
 
       {/* Featured Image */}
-      <div className="mb-4">
+      <div className="mb-4 flex flex-col gap-2">
         <label htmlFor="image" className="block text-gray-700 font-bold mb-2">
           Featured Image
         </label>
+        {images?.length == 1 && (
+          <>
+            <Image
+              src={images[0]}
+              alt=""
+              width="200"
+              height="200"
+              objectFit="cover"
+              objectPosition="top"
+              className="rounded-lg"
+            />
+            <input type="hidden" {...register("image")} value={images[0]} />
+          </>
+        )}
         <ImageUploadModal setImages={setImages} />
       </div>
 
@@ -99,10 +117,28 @@ const PostForm = () => {
           {...register("categoryId")}
           className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
+          <option value="" disabled selected>
+            ---
+          </option>
           {categories?.map((category, i) => (
             <option value={category.id}>{category.name}</option>
           ))}
         </select>
+      </div>
+
+      {/* Slug */}
+      <div className="mb-4">
+        <label htmlFor="tags" className="block text-gray-700 font-bold mb-2">
+          Slug
+        </label>
+        <input
+          type="text"
+          id="slug"
+          {...register("slug")}
+          placeholder="Enter unique URL-friendly identifier"
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+        <small className="text-gray-600">Example: technology-is-fun</small>
       </div>
 
       {/* Tags */}
@@ -127,12 +163,11 @@ const PostForm = () => {
         </label>
         <select
           id="status"
-          name="status"
+          {...register("status")}
           className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           <option value="draft">Draft</option>
           <option value="published">Published</option>
-          <option value="archived">Archived</option>
         </select>
       </div>
 

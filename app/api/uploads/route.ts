@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import path from "path";
 import { writeFile } from "fs/promises";
-import { connectToDB } from "@/lib/utils";
-import prisma from "@/prisma/prisma";
 
 export const POST = async (req: NextRequest) => {
   // getting the sent image
@@ -27,7 +25,5 @@ export const POST = async (req: NextRequest) => {
     console.error("Error occured ", error);
     return NextResponse.json({ Message: "The Image could not be uploaded!"}, {status: 500 });
   }
-  
-  
 
 };
