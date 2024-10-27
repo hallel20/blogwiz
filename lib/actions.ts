@@ -4,16 +4,12 @@ import prisma from "@/prisma/db"
 import { PostStatus, Role } from "@prisma/client"
 import { revalidatePath } from "next/cache"
 import bcrypt from "bcrypt";
-import auth from "@/app/auth";
 import { redirect } from 'next/navigation';
-import { SignInResponse, signIn } from 'next-auth/react';
+import { SignInResponse, getSession, signIn } from 'next-auth/react';
 import { CategoryForm } from "@/app/(admin)/admin/categories/NewCategory";
 
-export async function handleSignIn(data: Login) {
+export const handleSignIn = async (data: Login) => {
     const {email, password} = data
-    try {
-
-      
       if (!email || !password) {
         throw new Error('Please provide both email and password.');
       }
@@ -39,7 +35,6 @@ export async function handleSignIn(data: Login) {
   
   // Redirect on successful login
   redirect('/');
-} catch(ex) {console.log(ex)}
 }
 
 interface newUser {
@@ -170,11 +165,11 @@ export interface PostFormType {
   }
 
 export const createPost = async(data: PostFormType) => {
-    const user = auth().user
-    const {title, slug, status, content, tags, image} = data
+    const user = getSession()
+    const {title, slug, status, content, tags, image, categoryId} = data
     try {
     await prisma.post.create({data: {
-        title, slug, status, content, tags, userId: user.id, images: {create: [{url: image}]}
+      title, content, userId: user.id, slug, tags, categoryId, status, images: {create: [{url: image}]}
      }})
      revalidatePath("admin/posts")
     }
