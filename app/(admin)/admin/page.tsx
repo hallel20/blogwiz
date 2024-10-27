@@ -1,4 +1,12 @@
-const page = () => {
+import { getServerSession } from "next-auth";
+
+const page = async () => {
+  const session = await getServerSession();
+  if (session) {
+    console.log("User:", session.user);
+  } else {
+    console.log("Not Authenticated");
+  }
   return (
     <>
       <h1 className="text-2xl font-bold mb-6">Dashboard User</h1>

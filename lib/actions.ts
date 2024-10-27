@@ -7,6 +7,7 @@ import bcrypt from "bcrypt";
 import { redirect } from 'next/navigation';
 import { SignInResponse, getSession, signIn } from 'next-auth/react';
 import { CategoryForm } from "@/app/(admin)/admin/categories/NewCategory";
+import { getServerSession } from "next-auth";
 
 export const handleSignIn = async (data: Login) => {
     const {email, password} = data
@@ -157,19 +158,20 @@ export const deleteCategory = async (id: number) => {
 export interface PostFormType {
     title: string;
     content: string;
-    categoryId: number;
+    categoryId: string;
     tags: string;
     image: string;
     status: PostStatus;
     slug: string
+    email: string;
   }
 
 export const createPost = async(data: PostFormType) => {
-    const user = getSession()
-    const {title, slug, status, content, tags, image, categoryId} = data
+  const {title, slug, status, content, tags, email, image, categoryId} = data
+  const user = await prisma.user.findUnique({where: {email}})
     try {
     await prisma.post.create({data: {
-      title, content, userId: user.id, slug, tags, categoryId, status, images: {create: [{url: image}]}
+      title, content, userId: user!.id, slug, tags, categoryId: parseInt(categoryId), status, images: {create: [{url: image}]}
      }})
      revalidatePath("admin/posts")
     }

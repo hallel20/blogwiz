@@ -1,8 +1,10 @@
 import Link from "next/link";
 import UploadImage from "@/components/UploadImage";
 import PostForm from "./PostForm";
+import { getServerSession } from "next-auth";
 
-const page = () => {
+const page = async () => {
+  const session = await getServerSession();
   return (
     <div className="container mx-auto py-10">
       {/* Page Header */}
@@ -19,7 +21,7 @@ const page = () => {
       {/* Form Container */}
       <div className="bg-white shadow-xl flex w-full rounded-lg p-6">
         <div className="w-7/12">
-          <PostForm />
+          <PostForm email={session!.user!.email!} />
         </div>
         <div className="w-5/12">
           <UploadImage />

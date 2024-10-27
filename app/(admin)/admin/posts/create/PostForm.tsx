@@ -10,8 +10,9 @@ import { getCategories } from "@/lib/data";
 import Image from "next/image";
 import { createPost, PostFormType } from "@/lib/actions";
 import { useRouter } from "next/navigation";
+import Spinner from "@/components/reusable/Spinner";
 
-const PostForm = () => {
+const PostForm = ({ email }: { email: string }) => {
   const [categories, setCategories] = useState<Category[]>();
   const [images, setImages] = useState<string[]>();
   const [loading, setLoading] = useState(false);
@@ -19,7 +20,11 @@ const PostForm = () => {
 
   const router = useRouter();
 
-  const { register, reset, control, handleSubmit } = useForm<PostFormType>();
+  const { register, reset, control, handleSubmit } = useForm<PostFormType>({
+    defaultValues: {
+      email: email,
+    },
+  });
 
   useEffect(() => {
     const getStateCategories = async () => {
@@ -37,10 +42,17 @@ const PostForm = () => {
   return (
     <form
       onSubmit={handleSubmit(async (data) => {
-        setLoading(true);
-        await createPost(data);
-        setLoading(false);
-        router.push("/admin/posts/");
+        try {
+          console.log(data);
+          setLoading(true);
+          await createPost(data);
+          setLoading(false);
+          router.push("/admin/posts/");
+        } catch (ex) {
+          console.log(ex);
+          setError("Something went wrong, please try again!");
+          setLoading(false);
+        }
       })}
     >
       {/* Handle Errors */}
@@ -121,7 +133,9 @@ const PostForm = () => {
             ---
           </option>
           {categories?.map((category, i) => (
-            <option value={category.id}>{category.name}</option>
+            <option value={category.id} key={category.id}>
+              {category.name}
+            </option>
           ))}
         </select>
       </div>
@@ -175,9 +189,10 @@ const PostForm = () => {
       <div className="flex justify-end">
         <button
           type="submit"
-          className="bg-blue-500 text-white px-6 py-2 rounded-lg shadow hover:bg-blue-600"
+          disabled={loading}
+          className="bg-blue-500 flex items-center justify-center text-white px-6 py-2 rounded-lg shadow hover:bg-blue-600"
         >
-          Create Post
+          Create Post {loading && <Spinner />}
         </button>
       </div>
     </form>
