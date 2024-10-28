@@ -4,55 +4,16 @@ import prisma from "@/prisma/db"
 import { PostStatus, Role } from "@prisma/client"
 import { revalidatePath } from "next/cache"
 import bcrypt from "bcrypt";
-import { redirect } from 'next/navigation';
-import { SignInResponse, getSession, signIn } from 'next-auth/react';
 import { CategoryForm } from "@/app/(admin)/admin/categories/NewCategory";
 import { getServerSession } from "next-auth";
+import { PostFormType, SignUpForm } from "./formTypes";
 
-export const handleSignIn = async (data: Login) => {
-    const {email, password} = data
-      if (!email || !password) {
-        throw new Error('Please provide both email and password.');
-      }
-      
-      // Fetch user from database
-  const user = await prisma.user.findUnique({
-    where: { email },
-  });
 
-  if (!user || !(await bcrypt.compare(password, user.password))) {
-    throw new Error('Invalid email or password.');
-  }
-
-  const result = await signIn('credentials', {
-    email,
-    password,
-    redirect: false,
-  }) as SignInResponse;
-
-  if (result?.error) {
-    throw new Error(result.error);
-  }
-  
-  // Redirect on successful login
-  redirect('/');
-}
-
-interface newUser {
-    username: string;
-    password: string;
-    confirm_password: string;
-    firstname: string;
-    email: string;
-    lastname: string;
-    role: Role
-}
-
-export const createUser = async (data: newUser) => {
-    const {username, password, confirm_password, firstname, email, lastname, role} = data
+export const createUser = async (data: SignUpForm) => {
+    const {username, password, confirmPassword, firstname, email, lastname, role} = data
 
   try {
-    if (password != confirm_password)
+    if (password != confirmPassword)
       throw new Error("Password not match!");
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
@@ -65,12 +26,12 @@ export const createUser = async (data: newUser) => {
   }
 };
 
-export const signUp = async (data: newUser) => {
-    const { username, firstname, lastname, email, password, confirm_password } =
+export const signUp = async (data: SignUpForm) => {
+    const { username, firstname, lastname, email, password, confirmPassword } =
     data;
     
     try {
-        if (password != confirm_password) throw new Error("Password not match!");
+        if (password != confirmPassword) throw new Error("Password not match!");
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
@@ -88,26 +49,6 @@ export const signUp = async (data: newUser) => {
     throw new Error("Something went wrong, please try again!");
 }
 };
-
-export interface Login { 
-    email: string;
-    password: string;
-}
-
-// export const authenticate = async (data: Login) => {
-//   const { email, password } = data;
-
-//   try {
-//     await signIn("credentials", { redirect: false, email, password });
-//   } catch (ex: any) {
-//     if (ex.message.includes("CredentialsSignin")) {
-//       return "Wrong Credentials";
-//     }
-//     throw ex;
-//   }
-// };
-
-
 
 export const createCategory = async(data: CategoryForm) => {
   const {name, description, slug, image} = data
@@ -155,21 +96,19 @@ export const deleteCategory = async (id: number) => {
 }
 
 
-export interface PostFormType {
-    title: string;
-    content: string;
-    categoryId: string;
-    tags: string;
-    image: string;
-    status: PostStatus;
-    slug: string
-    email: string;
-  }
-
 export const createPost = async(data: PostFormType) => {
-  const {title, slug, status, content, tags, email, image, categoryId} = data
-  const user = await prisma.user.findUnique({where: {email}})
-    try {
+  const {title, slug, status, content, tags, image, categoryId} = data
+  const session = await getServerSession()
+  try {
+    if(!session?.user?.email) throw new Error("Not Authenticated!")
+
+    const email = session.user.email
+
+    if(!slug) throw new Error("Slug is required!")
+
+    const user = await prisma.user.findUnique({where: {email}})
+
+    if(!user) throw new Error("Bad Request!")
     await prisma.post.create({data: {
       title, content, userId: user!.id, slug, tags, categoryId: parseInt(categoryId), status, images: {create: [{url: image}]}
      }})
@@ -181,3 +120,36 @@ export const createPost = async(data: PostFormType) => {
     }
 } 
 
+export const updatePost = async(data: PostFormType, id: number) => {
+  const {title, status, content, tags, image, categoryId} = data
+  const session = await getServerSession()
+  try {
+    if(!session?.user?.email) throw new Error("Not Authenticated!")
+
+    const email = session.user.email
+
+    const user = await prisma.user.findUnique({where: {email}})
+
+    if(!user) throw new Error("Bad Request!")
+
+    if(user.role != "admin") throw new Error("Not Authorized!")
+    await prisma.post.update({where: {id}, data: {
+      title, content, userId: user!.id, tags, categoryId: parseInt(categoryId), status, images: {create: [{url: image}]}
+     }})
+     revalidatePath("admin/posts")
+    }
+    catch (ex) {
+        console.log(ex)
+        throw new Error("Failed to create Post")
+    }
+} 
+
+export const deletePost = async(id: number) => {
+  try {
+    await prisma.post.delete({where: {id}})
+    revalidatePath("admin/posts")
+  } catch (ex) {
+    console.log(ex)
+    throw new Error("Failed to delete post!")
+  }
+} 

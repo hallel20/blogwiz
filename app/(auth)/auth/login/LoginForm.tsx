@@ -3,17 +3,12 @@ import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import Button from "@/components/reusable/Button";
 import Spinner from "@/components/reusable/Spinner";
-import { handleSignIn } from "@/lib/actions";
 import { useState } from "react";
 import { signIn, SignInResponse } from "next-auth/react";
-
-interface LoginForm {
-  email: string;
-  password: string;
-}
+import { LoginFormType } from "@/lib/formTypes";
 
 const LoginForm = () => {
-  const { handleSubmit, register, reset } = useForm<LoginForm>();
+  const { handleSubmit, register, reset } = useForm<LoginFormType>();
   const [error, setError] = useState<string>();
   const [loading, setLoading] = useState(false);
 

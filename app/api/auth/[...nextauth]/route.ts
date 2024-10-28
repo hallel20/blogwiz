@@ -34,7 +34,7 @@ const handler = NextAuth({
         }
 
         // Return safe user object (no password)
-        return { id: user.id, name: user.firstname, email: user.email };
+        return { id: user.id, name: user.firstname, email: user.email, role: user.role };
       },
     }),
   ],

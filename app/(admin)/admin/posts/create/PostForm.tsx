@@ -2,17 +2,17 @@
 
 import { Controller, useForm } from "react-hook-form";
 import SimpleMDE from "react-simplemde-editor";
-import "easymde/dist/easymde.min.css";
 import { useEffect, useState } from "react";
 import { Category } from "@prisma/client";
 import ImageUploadModal from "@/components/reusable/ImageUploadModal";
 import { getCategories } from "@/lib/data";
 import Image from "next/image";
-import { createPost, PostFormType } from "@/lib/actions";
+import { createPost } from "@/lib/actions";
 import { useRouter } from "next/navigation";
 import Spinner from "@/components/reusable/Spinner";
+import { PostFormType } from "@/lib/formTypes";
 
-const PostForm = ({ email }: { email: string }) => {
+const PostForm = () => {
   const [categories, setCategories] = useState<Category[]>();
   const [images, setImages] = useState<string[]>();
   const [loading, setLoading] = useState(false);
@@ -20,11 +20,7 @@ const PostForm = ({ email }: { email: string }) => {
 
   const router = useRouter();
 
-  const { register, reset, control, handleSubmit } = useForm<PostFormType>({
-    defaultValues: {
-      email: email,
-    },
-  });
+  const { register, reset, control, handleSubmit } = useForm<PostFormType>();
 
   useEffect(() => {
     const getStateCategories = async () => {
@@ -100,18 +96,15 @@ const PostForm = ({ email }: { email: string }) => {
         <label htmlFor="content" className="block text-gray-700 font-bold mb-2">
           Post Content
         </label>
-        {/* <textarea
-          id="content"
-          name="content"
-          rows={6}
-          placeholder="Write your content here..."
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-        ></textarea> */}
         <Controller
           name="content"
           control={control}
           render={({ field }) => (
-            <SimpleMDE placeholder="Edit your post here..." {...field} />
+            <SimpleMDE
+              className="text-black"
+              placeholder="Write your content here..."
+              {...field}
+            />
           )}
         />
       </div>

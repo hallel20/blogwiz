@@ -1,11 +1,10 @@
 import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
 
 const page = async () => {
   const session = await getServerSession();
-  if (session) {
-    console.log("User:", session.user);
-  } else {
-    console.log("Not Authenticated");
+  if (!session) {
+    redirect("/auth/login");
   }
   return (
     <>

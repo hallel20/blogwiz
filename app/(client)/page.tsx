@@ -1,57 +1,11 @@
+import CategoryBar from "@/components/CategoryBar";
 import Image from "next/image";
 
 export default function Home() {
   return (
     <div className="bg-gray-100 font-sans">
-      {/* Header */}
-      <header className="bg-white shadow-md py-4">
-        <div className="container mx-auto px-4 flex justify-between items-center">
-          <h1 className="text-4xl font-bold">Dwell</h1>
-          <input
-            type="text"
-            placeholder="Search..."
-            className="border border-gray-300 p-2 rounded-md"
-          />
-        </div>
-      </header>
-
       {/* Navigation */}
-      <nav className="bg-gray-200 py-2">
-        <div className="container mx-auto px-4">
-          <ul className="flex space-x-4 text-gray-700">
-            <li>
-              <a href="#" className="hover:underline">
-                Latest
-              </a>
-            </li>
-            <li>
-              <a href="#" className="hover:underline">
-                Homes
-              </a>
-            </li>
-            <li>
-              <a href="#" className="hover:underline">
-                Rooms
-              </a>
-            </li>
-            <li>
-              <a href="#" className="hover:underline">
-                Furniture & Products
-              </a>
-            </li>
-            <li>
-              <a href="#" className="hover:underline">
-                Travel
-              </a>
-            </li>
-            <li>
-              <a href="#" className="hover:underline">
-                Design Ideas
-              </a>
-            </li>
-          </ul>
-        </div>
-      </nav>
+      <CategoryBar />
 
       {/* Main Content */}
       <div className="container mx-auto px-4 py-6 flex">

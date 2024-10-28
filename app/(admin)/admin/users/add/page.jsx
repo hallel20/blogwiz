@@ -1,20 +1,8 @@
-// import md5 from "md5";
 import { createUser } from "@/lib/actionsjs";
-import Image from "next/image";
-
-// const emailHash = md5("hallelojowuro@gmail.com");
 
 const Page = () => {
   return (
     <div className="container mx-auto px-4 py-8">
-      {/* <Image
-        src={`https://www.gravatar.com/avatar/${emailHash}`}
-        width="200"
-        height="200"
-        alt=""
-        className="object-cover"
-      /> */}
-      {/* Page Title */}
       <div className="text-2xl font-bold mb-6 text-center">Add New User</div>
 
       {/* Form Container */}
@@ -135,15 +123,15 @@ const Page = () => {
           {/* Confirm Password */}
           <div className="mb-6">
             <label
-              htmlFor="confirm-password"
+              htmlFor="confirmPassword"
               className="block text-sm font-medium text-gray-700"
             >
               Confirm Password
             </label>
             <input
               type="password"
-              id="confirm-password"
-              name="confirm_password"
+              id="confirmPassword"
+              name="confirmPassword"
               className="mt-1 block w-full px-4 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
               placeholder="Re-enter password"
               required

@@ -1,20 +1,12 @@
 "use client";
 import Button from "@/components/reusable/Button";
 import Spinner from "@/components/reusable/Spinner";
-import { signUp } from "@/lib/actionsjs";
+import { signUp } from "@/lib/actions";
+import { SignUpForm } from "@/lib/formTypes";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-
-interface SignUpForm {
-  firstname: String;
-  lastname: string;
-  username: string;
-  email: String;
-  password: String;
-  confirmPassword: String;
-}
 
 export default function SignUp() {
   const [error, setError] = useState<string>();

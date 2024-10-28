@@ -28,7 +28,7 @@ export const getCategory = async(id: string) => {
 
 export const getPosts = async() => {
     try {
-    const posts = await prisma.post.findMany({include: {_count: true}})
+    const posts = await prisma.post.findMany({include: {_count: true, user: true, category: {select: {name: true}}, images: true}})
     return posts
     }
     catch (ex) {
@@ -40,7 +40,7 @@ export const getPosts = async() => {
 
 export const getPost = async(slug: string) => {
     try {
-    const posts = await prisma.post.findUnique({where: {slug}, include: {comments: {include: {user: {include: {images: true}}}}, images: true, user: true}})
+    const posts = await prisma.post.findUnique({where: {slug}, include: {comments: {include: {user: {include: {images: true}}}}, category:true, images: true, user: true}})
     return posts
     }
     catch (ex) {
